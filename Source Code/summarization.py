@@ -1,6 +1,7 @@
 from transformers import pipeline
 import requests
 import json
+import soundfile as sf
 
 
 
@@ -14,6 +15,7 @@ min_length = 10
 max_length = 50
 audio_file_path = "AudioFile/audio.wav"
 output_dir = "Output"
+
 
 
 
@@ -70,6 +72,12 @@ if __name__ == '__main__':
   transcript = speech_pipeline(audio_file_path)
   print(transcript['text'])
 
-  final_transcript= transcript_post_process(transcript,num_points)
+  audio = sf.SoundFile(audio_file_path)
+  duration = audio.frames / audio.samplerate
 
-  summary_generation()
+  if duration > 180:
+    final_transcript= transcript_post_process(transcript,num_points)
+
+    summary_generation()
+  else:
+     print(f"audio recording too short need atleast 3 minutes current {duration} seconds!")
