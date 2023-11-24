@@ -7,7 +7,7 @@ import soundfile as sf
 
 
 # cfg
-API_KEY = "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"
+API_KEY = "Hugging Face API KEY"
 API_URL = "https://api-inference.huggingface.co/models/knkarthick/MEETING_SUMMARY"
 headers = {"Authorization": f"Bearer {API_KEY}"}
 num_points = 5
