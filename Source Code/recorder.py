@@ -37,6 +37,7 @@ class RecordingFile(object):
                 rate, frames_per_buffer):
         self.fname = fname
         self.mode = mode
+        self.paused = False
         self.channels = channels
         self.rate = rate
         self.frames_per_buffer = frames_per_buffer
@@ -58,8 +59,9 @@ class RecordingFile(object):
                                         input=True,
                                         frames_per_buffer=self.frames_per_buffer)
         for _ in range(int(self.rate / self.frames_per_buffer * duration)):
-            audio = self._stream.read(self.frames_per_buffer)
-            self.wavefile.writeframes(audio)
+            if not self.paused:
+                audio = self._stream.read(self.frames_per_buffer)
+                self.wavefile.writeframes(audio)
         return None
 
     def start_recording(self):
@@ -72,6 +74,17 @@ class RecordingFile(object):
                                         stream_callback=self.get_callback())
         self._stream.start_stream()
         return self
+    
+    def pause_recording(self):
+
+        self.paused = True
+        return self
+
+    def resume_recording(self):
+
+        self.paused = False
+        return self
+
 
     def stop_recording(self):
         self._stream.stop_stream()
